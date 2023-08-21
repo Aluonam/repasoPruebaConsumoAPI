@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const ConsumoPokemon = () => {
 
@@ -10,10 +10,13 @@ const ConsumoPokemon = () => {
         console.log(datos);
     }
 
-    llamadaAPI()
+    
 
   return (
-    <div>ConsumoPokemon</div>
+    <>
+    <div>Consumo API Pokemon</div>
+    <button onClick={()=>{llamadaAPI()}}>Clic</button>
+    </>
   )
 }
 
