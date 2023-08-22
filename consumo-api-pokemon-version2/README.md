@@ -1,38 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+```javascript
+import React, { useState } from 'react'
 
-First, run the development server:
+const ConsumoPokemon = () => {
+    //--------- useState guarda datos que se reciben de la API, por defecto vacio para hacer lógica de cuando haya algo muestre las imágenes.
+    const [datosAPI, setDatosAPI] = useState('')
+    //--------- useState que guarda lo que escribe el usuario.
+    const [datosInput, setDatosInput] = useState('')
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+    const llamadaAPI = async (nombrePokemon) => {
+        try{
+//--------------------la url debe usar comillas laterales  `  ` 
+            const url = `https://pokeapi.co/api/v2/pokemon/${nombrePokemon}`;
+            const llamada = await fetch(url);
+            const datos = await llamada.json();
+            // setDatosAPI(datos.sprites._default);
+            // --------------en la variable se especifican que se cojan dentro del objeto la parte frontal y trasera
+            setDatosAPI({
+              cara: datos.sprites.front_default,
+              culo: datos.sprites.back_default
+            });
+        } catch(error){
+        console.log("Error detectado",error)
+        }
+    }
+
+  //------Función que especifica que incluya la impresion en pantalla de una imagen con el src frontal y otra para el trasero
+    const imagenes = <>
+                    <img src={datosAPI.cara}/>
+                    <img src={datosAPI.culo}/>
+                    </>
+
+    
+
+  return (
+    <>
+    {datosAPI !== '' && imagenes}
+    <div>Introduce el nombre de un pokemon</div>
+    <input onChange={(e)=>{setDatosInput(e.target.value)}}></input>
+    <button onClick={()=>{llamadaAPI(datosInput)}}>Clic</button>
+    </>
+  )
+}
+
+export default ConsumoPokemon
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
